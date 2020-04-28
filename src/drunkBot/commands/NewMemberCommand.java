@@ -1,21 +1,23 @@
 package drunkBot.commands;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import drunkBot.core.DrunkBot;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class NewMemberCommand extends Command{
 
-
-    @Override
     public String description() {
         return "gonna make you a little account so you can actually use me. " +
                 "Just like how i used you're mum last night ;) ";
     }
 
-    @Override
-    public void run(MessageReceivedEvent event) {
-        //TODO
-        //create a db of users and associated data (credits for pokies, etc..)
-        //return a message depending on if they are successfully added
-        //  or if they are not able to be added for some reason (already added, etc..)
+    public void runCommand(MessageReceivedEvent event){
+        boolean result = DrunkBot.getMemberFunctions().addMember(event.getAuthor().getName());
+        if(result){
+            event.getChannel().sendMessage("<@"+event.getAuthor().getId()+"> yeah mate no problem.").queue();
+            event.getChannel().sendMessage(DrunkBot.getMemberFunctions().generateEmbededMessage(event.getAuthor()).build()).queue();
+        }
+        else{
+            event.getChannel().sendMessage("<@" + event.getAuthor().getId() +  "> couldn't add ya mate. Have you already been added?").queue();
+        }
     }
 }

@@ -1,8 +1,8 @@
 package drunkBot.commands;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public abstract class Command {
 
@@ -12,7 +12,7 @@ public abstract class Command {
      */
     public abstract String description();
 
-    public abstract void run(MessageReceivedEvent event);
+    public abstract void runCommand(MessageReceivedEvent event);
 
     protected boolean checkRole(String role, Member member){
         for(Role memberRole : member.getRoles()){

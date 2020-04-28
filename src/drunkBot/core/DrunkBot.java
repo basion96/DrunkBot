@@ -1,13 +1,19 @@
 package drunkBot.core;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-
+import drunkBot.eventListeners.MessageReceivedListener;
+import drunkBot.handlers.JukeboxMessageHandler;
+import drunkBot.memberFunctions.MemberFunctions;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import javax.security.auth.login.LoginException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DrunkBot {
+
     private static JDA jda;
+    private static MemberFunctions memberFunctions;
+    private Timer timer = new Timer();
 
     public static void main(String[] args){
         DrunkBot drunkBot = new DrunkBot();
@@ -15,26 +21,31 @@ public class DrunkBot {
     }
 
     private void run(){
-        JDABuilder bot = new JDABuilder(AccountType.BOT);
-        //get token from json file
-        bot.setToken("");
-        bot.setAutoReconnect(true);
-
-        try{
-            jda = bot.buildBlocking();
-        }catch(LoginException | InterruptedException e){
+        jda = null;
+        try {
+            jda = JDABuilder.createDefault("").build();
+        } catch (LoginException e) {
             e.printStackTrace();
         }
 
-        bot.addEventListener(
+        memberFunctions = new MemberFunctions();
 
-        );
+        jda.addEventListener(new JukeboxMessageHandler(), new MessageReceivedListener());
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                memberFunctions.saveUsers();
+            }
+        }, 3600000, 3600000);
 
     }
 
-}
+    public static JDA getJDA(){
+        return jda;
+    }
 
-//TODO
-/*
-king of beers
- */
+    public static MemberFunctions getMemberFunctions(){
+        return memberFunctions;
+    }
+}

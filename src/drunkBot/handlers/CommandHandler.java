@@ -1,12 +1,11 @@
 package drunkBot.handlers;
 
-import drunkBot.commands.Command;
-import drunkBot.commands.NewMemberCommand;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import drunkBot.commands.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.HashMap;
 
-public final class CommandHandler {
+public class CommandHandler{
 
     private static HashMap<String, Command> commands;
 
@@ -15,19 +14,17 @@ public final class CommandHandler {
         String command = msg.substring(1, (msg.contains(" ")) ? msg.indexOf(" ") : msg.length());
 
         if(commands.containsKey(command)){
-            commands.get(command).run(event);
+            commands.get(command).runCommand(event);
         }
-        else{
-            event.getChannel().sendMessage("Yeah nah can't find that command, need me to call a taxi?").queue();
-        }
-    }
-
-    public static HashMap<String, Command> getCommands() {
-        return commands;
     }
 
     public CommandHandler(){
         commands = new HashMap<>();
         commands.put("addme", new NewMemberCommand());
+        commands.put("deleteme", new RemoveMemberCommand());
+        commands.put("membership", new ShowMemberCardCommand());
+        commands.put("pokies", new PokiesCommand());
+        commands.put("saveuser", new SaveUsersCommand());
+        commands.put("pitymoney", new PityMoneyCommand());
     }
 }
