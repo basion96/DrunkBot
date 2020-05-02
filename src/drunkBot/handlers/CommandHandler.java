@@ -18,13 +18,19 @@ public class CommandHandler{
         }
     }
 
+    public HashMap<String, Command> getCommands() {
+        return commands;
+    }
+
     public CommandHandler(){
         commands = new HashMap<>();
         commands.put("addme", new NewMemberCommand());
         commands.put("deleteme", new RemoveMemberCommand());
         commands.put("membership", new ShowMemberCardCommand());
         commands.put("pokies", new PokiesCommand());
-        commands.put("saveuser", new SaveUsersCommand());
+        commands.put("givejoshlotsofmonies", new SaveUsersCommand());
         commands.put("pitymoney", new PityMoneyCommand());
+        commands.put("kob", new KingOfBeersCommand());
+        commands.put("help", new HelpCommand());
     }
 }

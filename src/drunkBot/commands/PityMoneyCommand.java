@@ -9,7 +9,7 @@ import java.util.Date;
 public class PityMoneyCommand extends Command{
     @Override
     public String description() {
-        return null;
+        return "Run out of money? claim the dole and get 20 credits";
     }
 
     @Override

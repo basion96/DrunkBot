@@ -1,10 +1,11 @@
 package drunkBot.core;
 
-import drunkBot.eventListeners.MessageReceivedListener;
+import drunkBot.eventListeners.*;
 import drunkBot.handlers.JukeboxMessageHandler;
 import drunkBot.memberFunctions.MemberFunctions;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import javax.security.auth.login.LoginException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,21 +24,28 @@ public class DrunkBot {
     private void run(){
         jda = null;
         try {
-            jda = JDABuilder.createDefault("").build();
+            jda = JDABuilder.createDefault("NzAzOTYxNzc5MjI2ODA0MjU0.XqWNiQ.we9NP-v4vduF6l6JNkYVN8YSsO4").build();
         } catch (LoginException e) {
             e.printStackTrace();
         }
 
+        jda.getPresence().setActivity(Activity.playing("with dem titties"));
+
         memberFunctions = new MemberFunctions();
 
-        jda.addEventListener(new JukeboxMessageHandler(), new MessageReceivedListener());
+        jda.addEventListener(
+                new MessageReceivedListener(),
+                new JukeboxMessageHandler(),
+                new GuildMemberJoinListener(),
+                new PokiesMessageHandler()
+        );
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 memberFunctions.saveUsers();
             }
-        }, 3600000, 3600000);
+        }, 300000, 600000);
 
     }
 

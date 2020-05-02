@@ -8,7 +8,7 @@ public class RemoveMemberCommand extends Command{
 
     @Override
     public String description() {
-        return "Member account will be removed from user base.";
+        return "Dont't wanna be a member anymore? lose access to benefits?";
     }
 
     @Override

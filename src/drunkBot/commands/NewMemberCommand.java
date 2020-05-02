@@ -6,8 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class NewMemberCommand extends Command{
 
     public String description() {
-        return "gonna make you a little account so you can actually use me. " +
-                "Just like how i used you're mum last night ;) ";
+        return "Adds you as a member so you can earn credits and access member benefits";
     }
 
     public void runCommand(MessageReceivedEvent event){

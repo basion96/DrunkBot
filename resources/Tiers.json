@@ -1,0 +1,28 @@
+{
+  "Tiers": [
+    {
+      "Tier" : "Poor man",
+      "Cost" : 0
+    },
+    {
+      "Tier" : "Getting There",
+      "Cost" : 100
+    },
+    {
+      "Tier" : "High roller",
+      "Cost" : 1000
+    },
+    {
+      "Tier" : "Pokie King",
+      "Cost" : 5000
+    },
+    {
+      "Tier" : "Kahoona",
+      "cost" : 10000
+    },
+    {
+      "Tier" : "Big Kahoona",
+      "Cost" : 15000
+    }
+  ]
+}

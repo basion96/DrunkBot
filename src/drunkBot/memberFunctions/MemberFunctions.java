@@ -2,18 +2,26 @@ package drunkBot.memberFunctions;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class MemberFunctions {
 
+    private HashMap<String, Integer> tiers;
     private ArrayList<Member> members;
     private int startingCredits;
 
     public MemberFunctions(){
         startingCredits = 100;
+        //ranks = readRanks();
         members = new ArrayList<>();
 
         ObjectInputStream in = null;
@@ -69,13 +77,7 @@ public class MemberFunctions {
 
     public EmbedBuilder generateEmbededMessage(User user){
         EmbedBuilder eb = new EmbedBuilder();
-        Member member = null;
-        for(Member m : members){
-            if(m.getName().equalsIgnoreCase(user.getName())){
-                member = m;
-                break;
-            }
-        }
+        Member member = getMember(user.getName());
 
         eb.setTitle(user.getName());
 
@@ -85,10 +87,17 @@ public class MemberFunctions {
         eb.setColor(new Color(0xF40C0C));
         eb.setColor(new Color(255, 0, 54));
 
-        eb.addField("Credits:", Integer.toString(member.getBalance()), false);
-        eb.addBlankField(false);
+        eb.addField("Credits:", Integer.toString(member.getBalance()), true);
+        eb.addField("Rank", "", true);
+        eb.addBlankField(true);
 
-        return  eb;
+        eb.addField("Wins:", Integer.toString(member.getWins()), true);
+        eb.addField("Losses", Integer.toString(member.getLosses()), true);
+        eb.addBlankField(true);
+        eb.addField("Total Winnings", Integer.toString(member.getTotalWinnings()), true);
+        eb.addField("Total Losses", Integer.toString(member.getTotalLosses()), true);
+        eb.addBlankField(true);
+        return eb;
     }
 
     public void saveUsers(){
@@ -109,5 +118,32 @@ public class MemberFunctions {
             System.out.println(e);
         }
         System.out.println("Success");
+    }
+
+    private HashMap<String, Integer> readTiers(){
+        HashMap<String, Integer> ranks = new HashMap<>();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = (JSONObject) jsonParser.parse(new FileReader("resources/Tiers.json"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonArray = (JSONArray) jsonObject.get("Tiers");
+        Iterator jsonItr = jsonArray.iterator();
+
+        jsonItr.forEachRemaining(rnk -> {
+            JSONObject obj = (JSONObject) rnk;
+            String rank = (String)obj.get("Tier");
+            Long cost = (Long)obj.get("Cost");
+            ranks.put(rank, cost.intValue());
+        });
+
+        return ranks;
+    }
+
+    public HashMap<String, Integer> getTiers() {
+        return tiers;
     }
 }

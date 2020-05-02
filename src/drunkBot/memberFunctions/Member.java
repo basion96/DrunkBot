@@ -3,12 +3,15 @@ package drunkBot.memberFunctions;
 import drunkBot.core.DrunkBot;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Member implements Serializable {
     private String name, lastPityMoneyUse;
+    ArrayList<String> achievements;
     private int credits, wins, losses, totalWinnings, totalLosses;
 
     public Member(String name, int startingCredits){
+        achievements = new ArrayList<>();
         this.name = name;
         credits = startingCredits;
         wins = 0;
@@ -16,6 +19,15 @@ public class Member implements Serializable {
         totalWinnings = 0;
         totalLosses = 0;
         lastPityMoneyUse = "";
+    }
+
+    public void addAchievement(String ach){
+        if(!achievements.contains(ach))
+            achievements.add(ach);
+    }
+
+    public ArrayList getAchiements(){
+        return achievements;
     }
 
     public void setName(String name){
@@ -35,10 +47,6 @@ public class Member implements Serializable {
     }
 
     public int getBalance(){
-        return credits;
-    }
-
-    public int checkBalance(){
         return credits;
     }
 

@@ -22,4 +22,8 @@ public class MessageReceivedListener extends ListenerAdapter {
             messageHandler.handleMessage(event);
         }
     }
+
+    public CommandHandler getCommandHandler(){
+        return commandHandler;
+    }
 }
