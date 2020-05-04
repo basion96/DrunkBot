@@ -27,6 +27,6 @@ public class PropertiesReader {
     }
 
     public String getPrefix(){
-        return config.getProperty("Prefix");
+        return config.getProperty("prefix");
     }
 }

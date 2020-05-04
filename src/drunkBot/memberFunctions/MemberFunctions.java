@@ -9,9 +9,7 @@ import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class MemberFunctions {
 
@@ -24,6 +22,7 @@ public class MemberFunctions {
         //ranks = readRanks();
         members = new ArrayList<>();
 
+        //read in user data
         ObjectInputStream in = null;
         File folder = new File("resources/users");
         for (final File fileEntry : folder.listFiles()) {
@@ -38,6 +37,14 @@ public class MemberFunctions {
                 }
             }
         }
+
+        //Timer to save users data
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                saveUsers();
+            }
+        }, 3000000, 6000000);
 
     }
 
@@ -117,7 +124,6 @@ public class MemberFunctions {
         } catch (Exception e){
             System.out.println(e);
         }
-        System.out.println("Success");
     }
 
     private HashMap<String, Integer> readTiers(){

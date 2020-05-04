@@ -7,9 +7,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import javax.security.auth.login.LoginException;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DrunkBot {
 
@@ -23,7 +20,6 @@ public class DrunkBot {
     }
 
     private void run(){
-
         properties = new PropertiesReader();
 
         jda = null;
@@ -40,18 +36,10 @@ public class DrunkBot {
         jda.addEventListener(
                 new MessageReceivedListener(),
                 new JukeboxMessageHandler(),
-                new GuildMemberJoinListener(),
-                new PokiesMessageHandler()
+                new GuildMemberJoinListener()
         );
 
-        //Timer to save all data
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                memberFunctions.saveUsers();
-                System.out.println("ran");
-            }
-        }, 3000000, 6000000);
+
 
     }
 
