@@ -8,6 +8,7 @@ Need a bot to bartend your virtual pub? DrunkBot promises not to drink on the jo
 * [Setting up DrunkBot](#setting-up-drunkbot)
 
 ##Features
+
 ###Member System
 The member system allows users to create a profile with DrunkBot in order to save and track their stats while using other features of Drunkbot.
 
