@@ -28,6 +28,7 @@ public class TerminalListener implements Runnable{
             // format = !money [user] [amount]
             case "money":
                 DrunkBot.getMemberFunctions().getMember(args[1]).addCredits(Integer.parseInt(args[2]));
+                System.out.println("adding money");
         }
     }
 

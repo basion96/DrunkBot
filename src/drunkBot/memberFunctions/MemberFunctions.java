@@ -25,15 +25,17 @@ public class MemberFunctions {
         //read in user data
         ObjectInputStream in = null;
         File folder = new File("resources/users");
-        for (final File fileEntry : folder.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                try {
-                    String filename = "resources/users/" + fileEntry.getName();
-                    in = new ObjectInputStream(new FileInputStream(filename));
-                    members.add((Member)in.readObject());
-                    in.close();
-                }catch (Exception e){
-                    System.out.println(e);
+        if(folder.exists()){
+            for (final File fileEntry : folder.listFiles()) {
+                if (!fileEntry.isDirectory()) {
+                    try {
+                        String filename = "resources/users/" + fileEntry.getName();
+                        in = new ObjectInputStream(new FileInputStream(filename));
+                        members.add((Member)in.readObject());
+                        in.close();
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
             }
         }
@@ -113,7 +115,7 @@ public class MemberFunctions {
 
         try{
             for(Member member : members){
-                String filename = "resources/users/User - " + member.getName() + ".txt";
+                String filename = "resources/users/user_" + member.getName() + ".txt";
                 fileOut = new FileOutputStream(filename);
                 out = new ObjectOutputStream(fileOut);
                 out.writeObject(member);

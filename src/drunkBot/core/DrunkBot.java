@@ -3,6 +3,7 @@ package drunkBot.core;
 import drunkBot.eventListeners.*;
 import drunkBot.handlers.JukeboxMessageHandler;
 import drunkBot.memberFunctions.MemberFunctions;
+import drunkBot.util.TerminalListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -32,6 +33,7 @@ public class DrunkBot {
         jda.getPresence().setActivity(Activity.playing("with dem titties"));
 
         memberFunctions = new MemberFunctions();
+        //memberFunctions.loadUsers();
 
         jda.addEventListener(
                 new MessageReceivedListener(),
@@ -39,7 +41,8 @@ public class DrunkBot {
                 new GuildMemberJoinListener()
         );
 
-
+        TerminalListener terminalListener = new TerminalListener();
+        new Thread(terminalListener).start();
 
     }
 
