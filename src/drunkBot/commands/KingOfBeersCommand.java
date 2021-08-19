@@ -15,10 +15,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+/**
+ * TODO:
+ *  -once game has started, lock to text channel that it was started in
+ *
+ */
+
 public class KingOfBeersCommand extends Command {
     @Override
     public String description() {
-        return "Have a game of king of beers and get wasted";
+        return "Have a game of King Of Beers and get a bit tipsy (or fuck eyed)";
     }
 
     private boolean gameInProgress;
@@ -58,8 +64,10 @@ public class KingOfBeersCommand extends Command {
             gameInProgress = true;
             event.getChannel().sendMessage(getNextCard(event.getAuthor().getName()).build()).queue();
         }
-        else
+        else if(msg.equals("!kob start") && gameInProgress){
             event.getChannel().sendMessage("Game's already in progress in " + event.getJDA().getTextChannelById(channelInUse).getName()).queue();
+            return;
+        }
 
         //Commands for when a game is in progress
 

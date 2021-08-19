@@ -1,33 +1,37 @@
-package drunkBot.memberFunctions;
-
-import drunkBot.core.DrunkBot;
+package drunkBot.serverFunctions;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-
 public class Member implements Serializable {
     private String name, lastPityMoneyUse;
-    ArrayList<String> achievements;
-    private int credits, wins, losses, totalWinnings, totalLosses;
+    private int credits, wins, losses, totalWinnings, totalLosses, biggestWin, doleUses, pubRank;
 
     public Member(String name, int startingCredits){
-        achievements = new ArrayList<>();
         this.name = name;
         credits = startingCredits;
         wins = 0;
         losses = 0;
         totalWinnings = 0;
         totalLosses = 0;
+        biggestWin = 0;
         lastPityMoneyUse = "";
+        doleUses = 0;
+        pubRank = 0;
     }
 
-    public void addAchievement(String ach){
-        if(!achievements.contains(ach))
-            achievements.add(ach);
+    public void pubRankLevelUp(){
+        pubRank++;
     }
 
-    public ArrayList getAchiements(){
-        return achievements;
+    public int getPubRank(){
+        return pubRank;
+    }
+
+    public void increaseDoleUses(){
+        doleUses++;
+    }
+
+    public int getDoleUses(){
+        return doleUses;
     }
 
     public void setName(String name){
@@ -80,6 +84,15 @@ public class Member implements Serializable {
 
     public int getTotalLosses(){
         return totalLosses;
+    }
+
+    public void checkForBiggestWin(int wonAmount){
+        if(wonAmount > biggestWin)
+            biggestWin = wonAmount;
+    }
+
+    public int getBiggestWin(){
+        return biggestWin;
     }
 
     public void setLastPityMoneyUse(String date){

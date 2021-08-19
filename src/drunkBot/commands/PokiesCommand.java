@@ -19,24 +19,27 @@ public class PokiesCommand extends Command {
     private final String[] symbols = {":eye: ", ":game_die: ", ":ring: ", ":red_car: ", ":snake: "};
     private String jackpotSymbol, majorSymbol, minorSymbol;
     private Boolean wonJackpot, wonMajor, wonMinor;
-    private int jackpot, major, minor;
+    private int jackpot, major, minor, timesJackpotWon, timesMajorWon, timesMinorWon;
 
     public PokiesCommand(){
         wonJackpot = false;
         wonMajor = false;
         wonMinor = false;
 
-        jackpot = 0;
-        loadData();
-        if(jackpot == 0){
-            System.out.println("failed to load data");
-            jackpot = 1000;
-            major = 500;
-            minor = 250;
-            jackpotSymbol = "<:alex6:703972081573822474>";
-            majorSymbol = "<:VB:695221487120023562>";
-            minorSymbol = "<:New:695220960474693672>";
-        }
+        Properties prop = getProperties();
+
+        jackpot = Integer.parseInt(prop.getProperty("currentJackpot"));
+        major = Integer.parseInt(prop.getProperty("currentMajor"));
+        minor = Integer.parseInt(prop.getProperty("currentMinor"));
+
+        jackpotSymbol = prop.getProperty("jackpotSymbol");
+        majorSymbol = prop.getProperty("majorSymbol");
+        minorSymbol = prop.getProperty("minorSymbol");
+
+        timesJackpotWon = Integer.parseInt(prop.getProperty("timesJackpotWon"));
+        timesMajorWon = Integer.parseInt(prop.getProperty("timesMajorWon"));
+        timesMinorWon = Integer.parseInt(prop.getProperty("timesMinorWon"));
+
         Timer pokiesSaver = new Timer();
         pokiesSaver.schedule(new TimerTask() {
             @Override
@@ -48,7 +51,7 @@ public class PokiesCommand extends Command {
 
     @Override
     public String description() {
-        return "ayye pokies time. Have a game and earn (or lose) some credits!";
+        return "It's the fuckin pokies mate!";
     }
 
     @Override
@@ -125,15 +128,15 @@ public class PokiesCommand extends Command {
         int total = (winnings > 0)? (winnings + betAmount) : (winnings - betAmount);
         if(wonJackpot){
             total += jackpot;
-            jackpot = 1000;
+            jackpot = Integer.parseInt(getProperties().getProperty("jackpotDefault"));
         }
         if(wonMajor){
             total += major;
-            major = 500;
+            major = Integer.parseInt(getProperties().getProperty("majorDefault"));
         }
         if(wonMinor){
             total += minor;
-            minor = 250;
+            minor = Integer.parseInt(getProperties().getProperty("minorDefault"));
         }
 
         if(total < 0) {
@@ -141,7 +144,7 @@ public class PokiesCommand extends Command {
             DrunkBot.getMemberFunctions().getMember(event.getAuthor().getName()).incrementLosses();
             jackpot += betAmount;
             major += betAmount*0.5;
-            minor += betAmount*.25;
+            minor += betAmount*0.25;
         }
         else {
             DrunkBot.getMemberFunctions().getMember(event.getAuthor().getName()).addTotalWinnings(total);
@@ -149,6 +152,7 @@ public class PokiesCommand extends Command {
         }
 
         DrunkBot.getMemberFunctions().getMember(event.getAuthor().getName()).addCredits(total);
+        DrunkBot.getMemberFunctions().getMember(event.getAuthor().getName()).checkForBiggestWin(total);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.CYAN);
@@ -170,6 +174,7 @@ public class PokiesCommand extends Command {
         eb.addField("Winnings:", Integer.toString(total), false);
 
         event.getChannel().sendMessage(eb.build()).queue();
+        DrunkBot.getMemberFunctions().saveUsers(DrunkBot.getMemberFunctions().getMember(event.getAuthor().getName()));
         wonJackpot = false;
         wonMajor = false;
         wonMinor = false;
@@ -233,6 +238,10 @@ public class PokiesCommand extends Command {
         eb.addField("Major: " + majorSymbol, Integer.toString(major), true);
         eb.addField("minor: " + minorSymbol, Integer.toString(minor), true);
 
+        eb.addField("Times Won: ", Integer.toString(timesJackpotWon), true);
+        eb.addField("Times Won: ", Integer.toString(timesMajorWon), true);
+        eb.addField("Times Won: ", Integer.toString(timesMinorWon), true);
+
         return eb;
     }
 
@@ -242,6 +251,9 @@ public class PokiesCommand extends Command {
         prop.setProperty("currentMajor", Integer.toString(major));
         prop.setProperty("curentMinor", Integer.toString(minor));
 
+        prop.setProperty("timesJackpotWon", Integer.toString(timesJackpotWon));
+        prop.setProperty("timesMajorWon", Integer.toString(timesMajorWon));
+        prop.setProperty("timesMinorWon", Integer.toString(timesMinorWon));
 
         try {
             prop.store(new FileOutputStream("resources/pokies.properties"), null);
@@ -251,22 +263,6 @@ public class PokiesCommand extends Command {
 
 
         System.out.println("Pokies save data successful");
-    }
-
-    private boolean loadData(){
-        Properties prop = getProperties();
-        if(prop == null)
-            return false;
-
-        jackpot = Integer.parseInt(prop.getProperty("currentJackpot"));
-        major = Integer.parseInt(prop.getProperty("currentMajor"));
-        minor = Integer.parseInt(prop.getProperty("curentMinor"));
-
-        jackpotSymbol = prop.getProperty("jackpotSymbol");
-        majorSymbol = prop.getProperty("majorSymbol");
-        minorSymbol = prop.getProperty("minorSymbol");
-        System.out.println("Pokies load data successful");
-        return true;
     }
 
     private Properties getProperties(){

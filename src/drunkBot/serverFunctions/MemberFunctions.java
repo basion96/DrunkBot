@@ -1,11 +1,6 @@
-package drunkBot.memberFunctions;
+package drunkBot.serverFunctions;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.*;
@@ -13,13 +8,11 @@ import java.util.*;
 
 public class MemberFunctions {
 
-    private HashMap<String, Integer> tiers;
     private ArrayList<Member> members;
     private int startingCredits;
 
     public MemberFunctions(){
         startingCredits = 100;
-        //ranks = readRanks();
         members = new ArrayList<>();
 
         //read in user data
@@ -44,7 +37,7 @@ public class MemberFunctions {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                saveUsers();
+                saveUsers(null);
             }
         }, 3000000, 6000000);
 
@@ -54,8 +47,14 @@ public class MemberFunctions {
         if(isMember(name))
             return false;
 
-        members.add(new Member(name, startingCredits));
+        Member member = new Member(name, startingCredits);
+        members.add(member);
+        saveUsers(member);
         return true;
+    }
+
+    public ArrayList<Member> getMembers(){
+        return members;
     }
 
     public boolean isMember(String name){
@@ -84,41 +83,57 @@ public class MemberFunctions {
         return null;
     }
 
-    public EmbedBuilder generateEmbededMessage(User user){
+    public EmbedBuilder generateEmbeddedMessage(net.dv8tion.jda.api.entities.Member user){
         EmbedBuilder eb = new EmbedBuilder();
-        Member member = getMember(user.getName());
+        Member member = getMember(user.getEffectiveName());
 
-        eb.setTitle(user.getName());
+        eb.setTitle(user.getEffectiveName());
 
-        eb.setThumbnail(user.getAvatarUrl());
+        eb.setThumbnail(user.getUser().getAvatarUrl());
 
         eb.setColor(Color.red);
-        eb.setColor(new Color(0xF40C0C));
-        eb.setColor(new Color(255, 0, 54));
 
         eb.addField("Credits:", Integer.toString(member.getBalance()), true);
-        eb.addField("Rank", "", true);
         eb.addBlankField(true);
 
         eb.addField("Wins:", Integer.toString(member.getWins()), true);
         eb.addField("Losses", Integer.toString(member.getLosses()), true);
         eb.addBlankField(true);
+
         eb.addField("Total Winnings", Integer.toString(member.getTotalWinnings()), true);
         eb.addField("Total Losses", Integer.toString(member.getTotalLosses()), true);
         eb.addBlankField(true);
+
+        eb.addField("Biggest win:", Integer.toString((member.getBiggestWin())), true);
+        eb.addField("Times dole used:", Integer.toString(member.getDoleUses()), true);
+        eb.addBlankField(true);
+
+        eb.addField("Pub Rank:", Integer.toString(getMember(user.getEffectiveName()).getPubRank()), true);
+
         return eb;
     }
 
-    public void saveUsers(){
+    public void saveUsers(Member m){
         FileOutputStream fileOut = null;
         ObjectOutputStream out = null;
 
         try{
-            for(Member member : members){
-                String filename = "resources/users/user_" + member.getName() + ".txt";
+            if(m==null){
+                for(Member member : members){
+                    String filename = "resources/users/user_" + member.getName() + ".txt";
+                    fileOut = new FileOutputStream(filename);
+                    out = new ObjectOutputStream(fileOut);
+                    out.writeObject(member);
+                    out.flush();
+                    out.close();
+                    fileOut.close();
+                }
+            }
+            else{
+                String filename = "resources/users/user_" + m.getName() + ".txt";
                 fileOut = new FileOutputStream(filename);
                 out = new ObjectOutputStream(fileOut);
-                out.writeObject(member);
+                out.writeObject(m);
                 out.flush();
                 out.close();
                 fileOut.close();
@@ -126,32 +141,5 @@ public class MemberFunctions {
         } catch (Exception e){
             System.out.println(e);
         }
-    }
-
-    private HashMap<String, Integer> readTiers(){
-        HashMap<String, Integer> ranks = new HashMap<>();
-
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = (JSONObject) jsonParser.parse(new FileReader("resources/Tiers.json"));
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-        JSONArray jsonArray = (JSONArray) jsonObject.get("Tiers");
-        Iterator jsonItr = jsonArray.iterator();
-
-        jsonItr.forEachRemaining(rnk -> {
-            JSONObject obj = (JSONObject) rnk;
-            String rank = (String)obj.get("Tier");
-            Long cost = (Long)obj.get("Cost");
-            ranks.put(rank, cost.intValue());
-        });
-
-        return ranks;
-    }
-
-    public HashMap<String, Integer> getTiers() {
-        return tiers;
     }
 }

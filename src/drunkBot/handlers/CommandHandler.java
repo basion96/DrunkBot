@@ -2,10 +2,11 @@ package drunkBot.handlers;
 
 import drunkBot.commands.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.HashMap;
 
-public class CommandHandler{
+public class CommandHandler extends ListenerAdapter {
 
     private static HashMap<String, Command> commands;
 
@@ -28,9 +29,10 @@ public class CommandHandler{
         commands.put("deleteme", new RemoveMemberCommand());
         commands.put("membership", new ShowMemberCardCommand());
         commands.put("pokies", new PokiesCommand());
-        commands.put("givejoshlotsofmonies", new SaveUsersCommand());
         commands.put("pitymoney", new PityMoneyCommand());
         commands.put("kob", new KingOfBeersCommand());
         commands.put("help", new HelpCommand());
+        commands.put("rank", new BuyPubRankCommand());
+        commands.put("leaderboard", new PubLeaderBoardCommand());
     }
 }

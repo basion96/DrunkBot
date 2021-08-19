@@ -8,7 +8,7 @@ public class RemoveMemberCommand extends Command{
 
     @Override
     public String description() {
-        return "Dont't wanna be a member anymore? lose access to benefits?";
+        return "For the shitcunts that don't want to be a valued patron of is fine establishment";
     }
 
     @Override
@@ -19,7 +19,7 @@ public class RemoveMemberCommand extends Command{
             if(msg.substring(msg.indexOf(" ")+1).equalsIgnoreCase(event.getAuthor().getName())){
                 boolean result = DrunkBot.getMemberFunctions().removeMember(event.getAuthor().getName());
                 if(result){
-                    event.getChannel().sendMessage("If ya say so..").queue();
+                    event.getChannel().sendMessage("What a stitch up, didn't even want you here aye mate").queue();
                     DrunkBot.getMemberFunctions().removeMember(event.getAuthor().getName());
                 }
                 else{

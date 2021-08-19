@@ -11,6 +11,6 @@ public class SaveUsersCommand extends Command{
 
     @Override
     public void runCommand(MessageReceivedEvent event) {
-        DrunkBot.getMemberFunctions().saveUsers();
+        DrunkBot.getMemberFunctions().saveUsers(null);
     }
 }
